@@ -1,16 +1,38 @@
-# tic_tac_toe_multiplayer
+# 🔷 Multiplayer Tic Tac Toe Game
 
-A new Flutter project.
+A real-time multiplayer Tic Tac Toe game built with:
 
-## Getting Started
+- 🧠 **Flutter** (Frontend)
+- ⚡ **Node.js + Socket.IO** (Backend)
+- 🗃️ **MongoDB Atlas** (Database)
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🖼️ Screenshot
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![Game Screenshot](assets/images/screenshot.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 📦 Features
+
+- Two-player real-time game with sockets
+- Automatic room creation & joining
+- Turn-based gameplay with visual UI
+- Score tracking and max rounds limit
+- Winner declaration and "Play Again" option
+- Automatic board reset for next round
+- Handles disconnection gracefully
+
+---
+
+
+### 🔧 Prerequisites
+
+- [Node.js](https://nodejs.org/) (v14+)
+- [Flutter SDK](https://flutter.dev/docs/get-started/install)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+
+---
+
+

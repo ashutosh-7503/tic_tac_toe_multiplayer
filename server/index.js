@@ -96,18 +96,47 @@ io.on("connection", (socket) => {
         try {
             let room = await Room.findById(roomId);
             let player = room.players.find((player) => player.socketId == winnerSocketId);
+            let otherPlayer = room.players.find((player) => player.socketId != winnerSocketId);
+
             console.log(player);
-            player.points+=1;
-            room=await room.save();
-            if(player.points>=room.maxRounds){
-                io.to(roomId).emit("endGame",player);
-            }else{
-                io.to(roomId).emit("pointIncrease",player);
+            player.points += 1;
+            await room.save();
+            if (player.points + otherPlayer.points == room.maxRounds) {
+                if (player.points > otherPlayer.points)
+                    io.to(roomId).emit("endGame", player);
+                else
+                    io.to(roomId).emit("endGame", otherPlayer);
+                await Room.findByIdAndDelete(roomId);
+                console.log(`Room ${roomId} deleted after game end.`);
+            } else {
+                io.to(roomId).emit("pointIncrease", player);
             }
         } catch (error) {
             console.log(error);
         }
-    })
+    });
+
+    socket.on('disconnect', async () => {
+        try {
+            const roomId = socket.data.roomId;
+            if (!roomId) return;
+
+            let room = await Room.findById(roomId);
+            if (!room) return;
+
+            const disconnectedPlayer = room.players.find(p => p.socketId === socket.id);
+            const otherPlayer = room.players.find(p => p.socketId !== socket.id);
+
+            if (otherPlayer) {
+                io.to(roomId).emit("endGameDueToError", {disconnectedPlayer});
+            }
+
+            await Room.findByIdAndDelete(roomId);
+            console.log(`Room ${roomId} deleted due to disconnect.`);
+        } catch (e) {
+            console.log("Error in disconnect handler:", e);
+        }
+    });
 })
 
 

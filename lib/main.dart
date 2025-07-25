@@ -21,15 +21,15 @@ class MyApp extends StatelessWidget {
       create: (context) => RoomDataProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Kattam Zero',
         theme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: Constants.bgColor,
         ),
         routes: {
-          MainMenuScreen.routeName: (context)=> const MainMenuScreen(),
-          CreateRoomScreen.routeName: (context)=>const  CreateRoomScreen(),
-          JoinRoomScreen.routeName: (context)=> const JoinRoomScreen(),
-          GameScreen.routeName: (context)=> const GameScreen(),
+          MainMenuScreen.routeName: (context) => const MainMenuScreen(),
+          CreateRoomScreen.routeName: (context) => const CreateRoomScreen(),
+          JoinRoomScreen.routeName: (context) => const JoinRoomScreen(),
+          GameScreen.routeName: (context) => const GameScreen(),
         },
         home: const MainMenuScreen(),
       ),

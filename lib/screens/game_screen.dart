@@ -25,6 +25,7 @@ class _GameScreenState extends State<GameScreen> {
     _socketMethods.updatePlayerStateListener(context);
     _socketMethods.pointIncreaseListener(context);
     _socketMethods.endGameListener(context);
+    _socketMethods.endGameDueToErrorListener(context);
   }
 
   @override

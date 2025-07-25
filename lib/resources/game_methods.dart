@@ -71,7 +71,8 @@ class GameMethods {
             roomDataProvider.displayElements[6] &&
         roomDataProvider.displayElements[2] != '') {
       winner = roomDataProvider.displayElements[2];
-    } else if (roomDataProvider.filledBoxes == 9) {
+    } 
+    if (roomDataProvider.filledBoxes == 9 && winner== '') {
       winner = '';
       showGameDialog(context, 'Draw');
     }

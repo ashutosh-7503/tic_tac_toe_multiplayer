@@ -5,6 +5,7 @@ import 'package:tic_tac_toe_multiplayer/provider/room_data_provider.dart';
 import 'package:tic_tac_toe_multiplayer/resources/game_methods.dart';
 import 'package:tic_tac_toe_multiplayer/resources/socket_client.dart';
 import 'package:tic_tac_toe_multiplayer/screens/game_screen.dart';
+import 'package:tic_tac_toe_multiplayer/screens/main_menu_screen.dart';
 import 'package:tic_tac_toe_multiplayer/utils/utils.dart';
 
 class SocketMethods {
@@ -41,7 +42,11 @@ class SocketMethods {
         context,
         listen: false,
       ).updateRoomData(room);
-      Navigator.pushNamed(context, GameScreen.routeName);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        GameScreen.routeName,
+        (rouute) => false,
+      );
     });
   }
 
@@ -51,7 +56,11 @@ class SocketMethods {
         context,
         listen: false,
       ).updateRoomData(room);
-      Navigator.pushNamed(context, GameScreen.routeName);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        GameScreen.routeName,
+        (route) => false,
+      );
     });
   }
 
@@ -112,7 +121,29 @@ class SocketMethods {
 
   void endGameListener(BuildContext context) {
     _socketClient.on('endGame', (playerData) {
-      showGameDialog(context, '${playerData['nickname']} won the game');
+      showGameWinnerDialog(context, '${playerData['nickname']} won the game');
+    });
+  }
+
+  void endGameDueToErrorListener(BuildContext context) {
+    _socketClient.on('endGameDueToError', (data) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('Game Over'),
+          content: Text('${data['nickname']} has disconnected.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pushNamedAndRemoveUntil(
+              context,
+              MainMenuScreen.routeName,
+              (route) => false,
+            ),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     });
   }
 }
