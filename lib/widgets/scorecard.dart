@@ -16,7 +16,9 @@ class Scorecard extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                roomDataProvider.player1.nickname,
+                roomDataProvider.player1.nickname.length <= 5
+                    ? roomDataProvider.player1.nickname
+                    : '${roomDataProvider.player1.nickname.substring(0, 5)}..',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
@@ -31,7 +33,9 @@ class Scorecard extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                roomDataProvider.player2.nickname,
+                roomDataProvider.player2.nickname.length <= 5
+                    ? roomDataProvider.player2.nickname
+                    : '${roomDataProvider.player1.nickname.substring(0, 4)}..',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(

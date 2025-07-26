@@ -26,6 +26,16 @@ A real-time multiplayer Tic Tac Toe game built with:
 
 ---
 
+## 🎮 How to Play
+
+1. **Main Menu:** Choose to create a new room or join an existing one.
+2. **Create Room:** Enter your nickname to start a new game. Share the generated room ID with your friend.
+3. **Join Room:** Enter your nickname and the room ID to join your friend's game.
+4. **Gameplay:** Take turns tapping the grid. The winner is declared after the set number of rounds, with scores tracked.
+5. **Play Again:** Option to reset and play more rounds!
+
+---
+
 
 ### 🔧 Prerequisites
 

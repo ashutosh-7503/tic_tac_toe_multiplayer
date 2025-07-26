@@ -118,7 +118,7 @@ io.on("connection", (socket) => {
 
     socket.on('disconnect', async () => {
         try {
-            const roomId = socket.data.roomId;
+            const roomId = socket.roomId;
             if (!roomId) return;
 
             let room = await Room.findById(roomId);
@@ -128,13 +128,30 @@ io.on("connection", (socket) => {
             const otherPlayer = room.players.find(p => p.socketId !== socket.id);
 
             if (otherPlayer) {
-                io.to(roomId).emit("endGameDueToError", {disconnectedPlayer});
+                io.to(roomId).emit("endGameDueToError", { disconnectedPlayer });
             }
 
             await Room.findByIdAndDelete(roomId);
             console.log(`Room ${roomId} deleted due to disconnect.`);
         } catch (e) {
             console.log("Error in disconnect handler:", e);
+        }
+    });
+
+    socket.on('leaveRoom', async ({ roomId }) => {
+        try {
+            const room = await Room.findById(roomId);
+            if (!roomId) return;
+
+            io.to(roomId).emit('playerLeft');
+
+            socket.leave(roomId);
+
+            await Room.findByIdAndDelete(roomId);
+
+            console.log(`Room ${roomId} deleted because a player left.`);
+        } catch (error) {
+            console.log('error in leave room:', error);
         }
     });
 })

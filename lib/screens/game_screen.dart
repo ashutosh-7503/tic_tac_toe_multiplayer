@@ -21,11 +21,14 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    _socketMethods.updateRoomListener(context);
-    _socketMethods.updatePlayerStateListener(context);
-    _socketMethods.pointIncreaseListener(context);
-    _socketMethods.endGameListener(context);
-    _socketMethods.endGameDueToErrorListener(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _socketMethods.updateRoomListener(context);
+      _socketMethods.updatePlayerStateListener(context);
+      _socketMethods.pointIncreaseListener(context);
+      _socketMethods.endGameListener(context);
+      _socketMethods.endGameDueToErrorListener(context);
+      _socketMethods.playerLeftListener(context);
+    });
   }
 
   @override
@@ -34,7 +37,24 @@ class _GameScreenState extends State<GameScreen> {
       context,
     );
     return Scaffold(
-      appBar: CupertinoNavigationBar(backgroundColor: Constants.bgColor),
+      appBar: CupertinoNavigationBar(
+        padding: EdgeInsetsDirectional.all(0),
+        backgroundColor: Constants.bgColor,
+        trailing: TextButton(
+          onPressed: () {
+            _socketMethods.leaveRoom(roomId: roomDataProvider.roomData['_id']);
+          },
+          style: TextButton.styleFrom(backgroundColor: Colors.red),
+          child: Text(
+            'Leave Room',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
       body: roomDataProvider.roomData['isJoin']
           ? const WaitingLobby()
           : SafeArea(

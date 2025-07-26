@@ -10,9 +10,9 @@ import 'package:tic_tac_toe_multiplayer/utils/utils.dart';
 
 class SocketMethods {
   final _socketClient = SocketClient.instance.socket!;
-
   Socket get socketClient => _socketClient;
-  //emits
+
+  // EMITS
   void createRoom(String nickname) {
     if (nickname.isNotEmpty) {
       _socketClient.emit('createRoom', {'nickname': nickname});
@@ -35,9 +35,14 @@ class SocketMethods {
     }
   }
 
-  //listeners
+  void leaveRoom({required String roomId}) {
+    _socketClient.emit('leaveRoom', {'roomId': roomId});
+  }
+
+  // LISTENERS
   void createRoomSuccessListener(BuildContext context) {
     _socketClient.on('createRoomSuccess', (room) {
+      if (!context.mounted) return;
       Provider.of<RoomDataProvider>(
         context,
         listen: false,
@@ -45,13 +50,14 @@ class SocketMethods {
       Navigator.pushNamedAndRemoveUntil(
         context,
         GameScreen.routeName,
-        (rouute) => false,
+        (route) => false,
       );
     });
   }
 
   void joinRoomSuccessListener(BuildContext context) {
     _socketClient.on('joinRoomSuccess', (room) {
+      if (!context.mounted) return;
       Provider.of<RoomDataProvider>(
         context,
         listen: false,
@@ -66,25 +72,26 @@ class SocketMethods {
 
   void errorOccuredListener(BuildContext context) {
     _socketClient.on('errorOccured', (data) {
+      if (!context.mounted) return;
       showSnackBar(context, data);
     });
   }
 
   void updatePlayerStateListener(BuildContext context) {
     _socketClient.on('updatePlayers', (playerData) {
-      Provider.of<RoomDataProvider>(
+      if (!context.mounted) return;
+      final roomProvider = Provider.of<RoomDataProvider>(
         context,
         listen: false,
-      ).updatePlayer1(playerData[0]);
-      Provider.of<RoomDataProvider>(
-        context,
-        listen: false,
-      ).updatePlayer2(playerData[1]);
+      );
+      roomProvider.updatePlayer1(playerData[0]);
+      roomProvider.updatePlayer2(playerData[1]);
     });
   }
 
   void updateRoomListener(BuildContext context) {
     _socketClient.on('updateRoom', (data) {
+      if (!context.mounted) return;
       Provider.of<RoomDataProvider>(
         context,
         listen: false,
@@ -94,40 +101,45 @@ class SocketMethods {
 
   void tappedListener(BuildContext context) {
     _socketClient.on('tapped', (data) {
-      RoomDataProvider roomDataProvider = Provider.of<RoomDataProvider>(
+      if (!context.mounted) return;
+      final roomProvider = Provider.of<RoomDataProvider>(
         context,
         listen: false,
       );
-      roomDataProvider.updateDisplayElements(data['index'], data['choice']);
-      roomDataProvider.updateRoomData(data['room']);
+      roomProvider.updateDisplayElements(data['index'], data['choice']);
+      roomProvider.updateRoomData(data['room']);
       GameMethods().checkWinner(context, _socketClient);
     });
   }
 
   void pointIncreaseListener(BuildContext context) {
+    _socketClient.off('pointIncrease');
     _socketClient.on('pointIncrease', (playerData) {
-      print('point increased of ${playerData['nickname']}');
-      var roomDataProvider = Provider.of<RoomDataProvider>(
+      if (!context.mounted) return;
+      final roomProvider = Provider.of<RoomDataProvider>(
         context,
         listen: false,
       );
-      if (playerData['socketId'] == roomDataProvider.player1.socketId) {
-        roomDataProvider.updatePlayer1(playerData);
+      if (playerData['socketId'] == roomProvider.player1.socketId) {
+        roomProvider.updatePlayer1(playerData);
       } else {
-        roomDataProvider.updatePlayer2(playerData);
+        roomProvider.updatePlayer2(playerData);
       }
     });
   }
 
   void endGameListener(BuildContext context) {
     _socketClient.on('endGame', (playerData) {
+      if (!context.mounted) return;
       showGameWinnerDialog(context, '${playerData['nickname']} won the game');
     });
   }
 
   void endGameDueToErrorListener(BuildContext context) {
     _socketClient.on('endGameDueToError', (data) {
+      if (!context.mounted) return;
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (_) => AlertDialog(
           title: Text('Game Over'),
@@ -135,15 +147,24 @@ class SocketMethods {
           actions: [
             TextButton(
               onPressed: () => Navigator.pushNamedAndRemoveUntil(
-              context,
-              MainMenuScreen.routeName,
-              (route) => false,
-            ),
+                context,
+                MainMenuScreen.routeName,
+                (route) => false,
+              ),
               child: Text('OK'),
             ),
           ],
         ),
       );
+    });
+  }
+
+  void playerLeftListener(BuildContext context) {
+    _socketClient.on('playerLeft', (_) {
+      if (!context.mounted) return;
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil(MainMenuScreen.routeName, (route) => false);
     });
   }
 }
