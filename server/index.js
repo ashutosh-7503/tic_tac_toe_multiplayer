@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { on } = require("events");
 const express = require("express");
 const http = require("http");
@@ -9,7 +10,7 @@ var server = http.createServer(app);
 const Room = require('./models/room');
 var io = require("socket.io")(server);
 
-const DB = "mongodb+srv://ashutoshdwivedi540:KnockOut%40101@cluster0.h3dgsbl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const DB = process.env.MONGO_URI;
 
 io.on("connection", (socket) => {
     console.log("connected");
