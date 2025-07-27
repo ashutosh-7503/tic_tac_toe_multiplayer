@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe_multiplayer/resources/socket_methods.dart';
 import 'package:tic_tac_toe_multiplayer/screens/main_menu_screen.dart';
