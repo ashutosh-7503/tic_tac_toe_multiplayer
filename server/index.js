@@ -155,7 +155,34 @@ io.on("connection", (socket) => {
             console.log('error in leave room:', error);
         }
     });
-})
+
+    socket.on('playerReady', async ({ roomId, socketId }) => {
+        try {
+            const room = await Room.findById(roomId);
+            if (!room) return;
+
+            // Mark current player as ready
+            const player = room.players.find(p => p.socketId === socketId);
+            if (player) player.isReady = true;
+
+            await room.save();
+
+            const allReady = room.players.every(p => p.isReady);
+
+            if (allReady) {
+                // Reset both players' isReady to false for next round
+                room.players.forEach(p => p.isReady = false);
+                await room.save();
+
+                // Emit event to both players to reset game board
+                io.to(roomId).emit('bothPlayersReady', room);
+            }
+        } catch (e) {
+            console.log('Error in playerReady:', e);
+        }
+    });
+
+});
 
 
 

@@ -39,6 +39,10 @@ class SocketMethods {
     _socketClient.emit('leaveRoom', {'roomId': roomId});
   }
 
+  void playerReady({required String roomId, required String socketId}) {
+    _socketClient.emit('playerReady', {'roomId': roomId, 'socketId': socketId});
+  }
+
   // LISTENERS
   void createRoomSuccessListener(BuildContext context) {
     _socketClient.on('createRoomSuccess', (room) {
@@ -125,6 +129,17 @@ class SocketMethods {
       } else {
         roomProvider.updatePlayer2(playerData);
       }
+    });
+  }
+
+  void bothPlayersReadyListener(BuildContext context) {
+    _socketClient.on('bothPlayersReady', (roomData) {
+      Provider.of<RoomDataProvider>(
+        context,
+        listen: false,
+      ).updateRoomData(roomData);
+      Navigator.pop(context);
+      GameMethods().clearBoard(context);
     });
   }
 

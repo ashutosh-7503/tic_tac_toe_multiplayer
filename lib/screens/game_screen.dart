@@ -28,6 +28,7 @@ class _GameScreenState extends State<GameScreen> {
       _socketMethods.endGameListener(context);
       _socketMethods.endGameDueToErrorListener(context);
       _socketMethods.playerLeftListener(context);
+      _socketMethods.bothPlayersReadyListener(context);
     });
   }
 

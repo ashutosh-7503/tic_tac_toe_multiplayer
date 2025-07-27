@@ -71,21 +71,36 @@ class GameMethods {
             roomDataProvider.displayElements[6] &&
         roomDataProvider.displayElements[2] != '') {
       winner = roomDataProvider.displayElements[2];
-    } 
-    if (roomDataProvider.filledBoxes == 9 && winner== '') {
+    }
+    if (roomDataProvider.filledBoxes == 9 && winner == '') {
       winner = '';
-      showGameDialog(context, 'Draw');
+      showGameDialog(
+        context,
+        'Draw',
+        roomDataProvider.roomData['_id'],
+        socketClient.id!,
+      );
     }
 
     if (winner != '') {
       if (roomDataProvider.player1.playerType == winner) {
-        showGameDialog(context, '${roomDataProvider.player1.nickname} won');
+        showGameDialog(
+          context,
+          '${roomDataProvider.player1.nickname} won',
+          roomDataProvider.roomData['_id'],
+          socketClient.id!,
+        );
         socketClient.emit('winner', {
           'winnerSocketId': roomDataProvider.player1.socketId,
           'roomId': roomDataProvider.roomData['_id'],
         });
       } else {
-        showGameDialog(context, '${roomDataProvider.player2.nickname} won');
+        showGameDialog(
+          context,
+          '${roomDataProvider.player2.nickname} won',
+          roomDataProvider.roomData['_id'],
+          socketClient.id!,
+        );
         socketClient.emit('winner', {
           'winnerSocketId': roomDataProvider.player2.socketId,
           'roomId': roomDataProvider.roomData['_id'],

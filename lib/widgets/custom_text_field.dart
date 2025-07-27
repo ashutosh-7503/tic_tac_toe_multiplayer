@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tic_tac_toe_multiplayer/utils/constants.dart';
+import 'package:tic_tac_toe_multiplayer/utils/utils.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -28,6 +30,13 @@ class CustomTextField extends StatelessWidget {
           hintText: hintText,
           fillColor: Constants.bgColor,
           filled: true,
+          suffixIcon: IconButton(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: controller.text));
+              showSnackBar(context, 'Copied to clipboard');
+            },
+            icon: Icon(Icons.copy),
+          ),
         ),
       ),
     );

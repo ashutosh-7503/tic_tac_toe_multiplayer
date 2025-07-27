@@ -14,6 +14,10 @@ const playerSchema= new mongoose.Schema({
     playerType:{
         required: true,
         type: String,
+    },
+    isReady:{
+        type: Boolean,
+        default: false,
     }
 });
 module.exports=playerSchema;
